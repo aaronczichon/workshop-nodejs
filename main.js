@@ -1,1 +1,3 @@
-console.log('Hello CarAPI');
+import { fullName } from "./person.js";
+
+console.log(fullName());
