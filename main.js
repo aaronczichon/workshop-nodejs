@@ -15,3 +15,7 @@ readStream.on('error', (error) => {
 readStream.on('end', () => {
     console.log('End of file');
 });
+
+setTimeout(() => readStream.pause(), 5);
+
+setTimeout(() => readStream.resume(), 2000);
