@@ -1,10 +1,12 @@
-const fs = require('fs/promises');
-const path = require('path');
+const express = require('express');
 
-const filePath = path.join(__dirname, 'Task3_Bericht_Autohersteller.txt');
+const app = express();
+const port = 8080;
 
-const readReportFile = async (path) => {
-  return fs.readFile(path, 'utf8').catch(err => console.log(err));
-};
+app.get('/', (req, res) => {
+  res.send('Hello CarAPI!');
+});
 
-readReportFile(filePath).then(data => console.log(data));
+app.listen(port, () => {
+  console.log('App started');
+});
