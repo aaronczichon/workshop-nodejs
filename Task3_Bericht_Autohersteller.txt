@@ -1,3 +1,4 @@
+Beispieldatei für den NodeJS Workshop 
 Generiert mit ChatGPT.
 
 Deutsche Autohersteller und ihre weltweite Dominanz
