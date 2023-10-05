@@ -1,0 +1,146 @@
+[
+  {
+    "name": "Volkswagen",
+    "foundingYear": 1937,
+    "headquarters": "Wolfsburg",
+    "cars": [
+      {
+        "model": "VW Golf",
+        "yearBuilt": 1974,
+        "price": 25000
+      },
+      {
+        "model": "VW Passat",
+        "yearBuilt": 1973,
+        "price": 30000
+      },
+      {
+        "model": "VW Tiguan",
+        "yearBuilt": 2007,
+        "price": 32000
+      },
+      {
+        "model": "VW Polo",
+        "yearBuilt": 1975,
+        "price": 22000
+      },
+      {
+        "model": "VW Touareg",
+        "yearBuilt": 2002,
+        "price": 45000
+      },
+      {
+        "model": "VW Arteon",
+        "yearBuilt": 2017,
+        "price": 38000
+      }
+    ]
+  },
+  {
+    "name": "BMW",
+    "foundingYear": 1916,
+    "headquarters": "Munich",
+    "cars": [
+      {
+        "model": "BMW 3 Series",
+        "yearBuilt": 1975,
+        "price": 35000
+      },
+      {
+        "model": "BMW 5 Series",
+        "yearBuilt": 1972,
+        "price": 45000
+      },
+      {
+        "model": "BMW X5",
+        "yearBuilt": 1999,
+        "price": 55000
+      },
+      {
+        "model": "BMW 7 Series",
+        "yearBuilt": 1977,
+        "price": 65000
+      },
+      {
+        "model": "BMW Z4",
+        "yearBuilt": 2002,
+        "price": 60000
+      },
+      {
+        "model": "BMW i3",
+        "yearBuilt": 2013,
+        "price": 40000
+      }
+    ]
+  },
+  {
+    "name": "Mercedes-Benz",
+    "foundingYear": 1926,
+    "headquarters": "Stuttgart",
+    "cars": [
+      {
+        "model": "Mercedes-Benz C-Class",
+        "yearBuilt": 1993,
+        "price": 40000
+      },
+      {
+        "model": "Mercedes-Benz E-Class",
+        "yearBuilt": 1953,
+        "price": 55000
+      },
+      {
+        "model": "Mercedes-Benz A-Class",
+        "yearBuilt": 1997,
+        "price": 35000
+      },
+      {
+        "model": "Mercedes-Benz GLC",
+        "yearBuilt": 2015,
+        "price": 48000
+      },
+      {
+        "model": "Mercedes-Benz S-Class",
+        "yearBuilt": 1954,
+        "price": 75000
+      },
+      {
+        "model": "Mercedes-Benz GLE",
+        "yearBuilt": 2015,
+        "price": 60000
+      }
+    ]
+  },
+  {
+    "name": "Audi",
+    "foundingYear": 1909,
+    "headquarters": "Ingolstadt",
+    "cars": [
+      {
+        "model": "Audi A3",
+        "yearBuilt": 1996,
+        "price": 38000,
+        "fuelType": "Gas"
+      },
+      {
+        "model": "Audi A4",
+        "yearBuilt": 1994,
+        "price": 40000
+      },
+      {
+        "model": "Audi Q5",
+        "yearBuilt": 2008,
+        "price": 45000
+      },
+      {
+        "model": "Audi A6",
+        "yearBuilt": 1994,
+        "price": 50000
+      },
+      {
+        "model": "Audi Q7",
+        "yearBuilt": 2005,
+        "price": 55000
+      }
+    ]
+  }
+]
