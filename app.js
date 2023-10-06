@@ -9,6 +9,7 @@ const carsRouter = require('./routes/cars');
 const { loggingMiddleware } = require('./helpers/logging-middleware');
 const app = express();
 const swagger = require('express-swagger-generator')(app);
+const compression = require('compression');
 
 const passport = require('passport');
 const { passportStrategyInit } = require('./authentication/basic-strategy');
@@ -23,7 +24,8 @@ let options = {
       host: 'localhost:3000',
       basePath: '/',
       produces: [
-          "application/json"
+          "application/json",
+          "text/html"
       ],
       schemes: ['http']
   },
@@ -34,15 +36,18 @@ swagger(options)
 
 passportStrategyInit();
 
+// Setting default view engine before router initialization
+app.set('view engine', 'pug');
+app.use(compression());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 app.use(loggingMiddleware);
 
 app.use('/', indexRouter);
-app.use('/manufacturer',passport.authenticate('basic', {session: false}), manufacturersRouter);
+app.use('/manufacturer', manufacturersRouter);
 app.use('/car', carsRouter);
 
  

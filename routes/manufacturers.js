@@ -12,11 +12,22 @@ const client = new PrismaClient();
 
 router.get('/', async (req, res) => {
   const manufacturers = await client.manufacturer.findMany();
+
+  if (req.query.format === 'json') {
+    const cars = await client.car.findMany();
+    // Using the map for manufactures and cars because SQLite doesnt support the include currently
+    manufacturers.forEach(manufacturer => manufacturer.cars = cars.filter(car => car.manufacturer_id === manufacturer.id));
+    return res.json(manufacturers).send();
+  }
+
+  res.render('manufacturers', { 
+    title: 'CarAPI - Manufacturers', 
+    heading: 'Manufacturers',
+    manufacturers: manufacturers
+  });
+
   
-  const cars = await client.car.findMany();
-  // Using the map for manufactures and cars because SQLite doesnt support the include currently
-  manufacturers.forEach(manufacturer => manufacturer.cars = cars.filter(car => car.manufacturer_id === manufacturer.id));
-  res.json(manufacturers).send();
+  
 });
 
 /**
@@ -37,6 +48,7 @@ router.get('/', async (req, res) => {
  * @return {string} 400 - Missing required fields
  */
 router.post('/', 
+passport.authenticate('basic', {session: false}),
 async (req, res) => {
   const newManufacturer = { name, foundingYear, headquarters } = req.body;
   if (!newManufacturer.name || !newManufacturer.foundingYear || !newManufacturer.headquarters)

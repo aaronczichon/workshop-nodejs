@@ -9,8 +9,21 @@ const client = new PrismaClient();
 router.get('/', async (req, res) => {
   const cars = await client.car.findMany();
 
+  const jsonRequested = req.headers['content-type'] === 'application/json';
+
+  if (!jsonRequested) {
+    return res.render('cars', {
+      title: 'CarAPI - Cars',
+      heading: 'Cars',
+      cars
+    });
+  }
+
   res.json(cars).send();
 });
+
+
+
 
 router.get('/:carId', async (req, res) => {
   const car = await client.car.findUnique({
