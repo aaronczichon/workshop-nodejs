@@ -4,15 +4,63 @@ const router = express.Router();
 const { readFile, writeFile } = require('../helpers/file-handler');
 const { route } = require('.');
 const { timeMiddleware } = require('../helpers/time-middleware');
+const { PrismaClient } = require('@prisma/client');
+const { hashValue } = require('../helpers/hash-value');
+const passport = require('passport');
+
+const client = new PrismaClient();
 
 router.get('/', async (req, res) => {
-  const manufacturers = await readFile();
+  const manufacturers = await client.manufacturer.findMany();
+  
+  const cars = await client.car.findMany();
+  // Using the map for manufactures and cars because SQLite doesnt support the include currently
+  manufacturers.forEach(manufacturer => manufacturer.cars = cars.filter(car => car.manufacturer_id === manufacturer.id));
   res.json(manufacturers).send();
 });
 
+/**
+ * @typedef Manufacturer
+ * @property {string} name - The name of the manufacturer
+ * @property {number} foundingYear - The year the manufacturer was founded
+ * @property {string} headquarters - The location of the manufacturer's headquarters
+ * @property {number} id - ID
+ */
+
+/**
+ * Used to create a new manufacturer
+ * @route POST /manufacturer
+ * @param {string} name - The name of the manufacturer
+ * @param {number} foundingYear - The year the manufacturer was founded
+ * @param {string} headquarters - The location of the manufacturer's headquarters
+ * @return {Manufacturer.model} 200 - The created manufacturer
+ * @return {string} 400 - Missing required fields
+ */
+router.post('/', 
+async (req, res) => {
+  const newManufacturer = { name, foundingYear, headquarters } = req.body;
+  if (!newManufacturer.name || !newManufacturer.foundingYear || !newManufacturer.headquarters)
+    return res.status(400).send('Missing required fields');
+
+  const manufacturer = await client.manufacturer.create({
+    data: newManufacturer
+  });
+  res.json(manufacturer).send();
+})
+
+/**
+ * Returns a single manufacturer by ID if found
+ * @route GET /manufacturer/:manufacturerId
+ * @param {number} manufacturerId - ID of manufacturer
+ * @return {Manufacturer.model} 200 - The found manufacturer
+ * @return {string} 404 - Mnaufacturer not found
+ */
 router.get('/:manufacturerId', async (req, res) => {
-  const manufacturers = await readFile();
-  const manufacturer = manufacturers.find(item => item.name.toLowerCase().indexOf(req.params.manufacturerId.toLowerCase()) > -1);
+  const manufacturer = await client.manufacturer.findUnique({
+    where: {
+      id: parseInt(req.params.manufacturerId),
+    }
+  });
 
   if (!manufacturer)
     return res.status(404).send('Manufacturer not found');
@@ -21,40 +69,36 @@ router.get('/:manufacturerId', async (req, res) => {
 });
 
 router.get('/:manufacturerId/car', async (req, res) => {
-  const manufacturers = await readFile();
-  const item = manufacturers.find(item => item.name.toLowerCase() === req.params.manufacturerId.toLowerCase());
-  const cars = item ? item.cars : [];
+  const cars = await client.car.findMany({
+    where: {
+      manufacturer_id: parseInt(req.params.manufacturerId),
+    }
+  });
   res.json(cars).send();
 });
 
-router.post('/', async (req, res) => {
-  const manufacturers = await readFile();
-
-  manufacturers.push(req.body);
-  await writeFile(manufacturers);
-
-  res.json(req.body).send();
-});
-
 router.post('/:manufacturerId/car', async (req, res) => {
-  const manufacturers = await readFile();
-  const manufacturer = manufacturers.find(item => item.name.toLowerCase() === req.params.manufacturerId.toLowerCase());
-  
+  const manufacturer = await client.manufacturer.findUnique({
+    where: {
+      id: parseInt(req.params.manufacturerId),
+    },
+  });
+
   if (!manufacturer)
     return res.status(404).send('Manufacturer not found');
 
-  const { yearBuilt, model, price } = req.body;
+  const car = { yearBuilt, model, price } = req.body;
   if (!yearBuilt || !model || !price)
     return res.status(400).send('Missing required fields');
 
-  manufacturers.find(m => m.name === manufacturer.name).cars.push({
-    model,
-    price,
-    yearBuilt
+  const createdCar = await client.car.create({
+    data: {
+      ...car,
+      manufacturer_id: manufacturer.id
+    }
   });
-  await writeFile(manufacturers);
 
-  res.json(req.body).send();
+  res.json(createdCar).send();
 });
 
 module.exports = router;
